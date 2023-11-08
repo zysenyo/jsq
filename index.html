@@ -10,7 +10,7 @@
         }
 
         .container {
-            max-width: 320px;
+            /*max-width: 320px;*/
             margin: 0 auto;
         }
 
@@ -35,7 +35,6 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(4, 66px);
-            /*grid-auto-rows: minmax(4, 1fr);*/
             grid-gap: 5px;
             margin-top: 20px;
         }
@@ -46,7 +45,6 @@
             justify-content: center; /* 水平居中 */
             padding: 10px;
             font-size: 16px;
-            /*text-align: center;*/
             background-color: #ccc;
             cursor: pointer;
         }
@@ -91,10 +89,6 @@
             color: red;
         }
 
-        /*.Jin,.Kg{
-            width: 50%;
-        }*/
-
         input {
             width: 50%;
             text-align: right;
@@ -137,7 +131,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- <label for="pricePerJin">元/斤：</label> -->
         <div class="shuru">
             <div class="Jin">
                 <input type="text" id="pricePerJin" value="0" onclick="setActiveInput('pricePerJin')" class="active-input" autofocus readonly>
@@ -149,11 +142,6 @@
                 <i>元/公斤</i>
             </div>
         </div>
-        
-        <!-- <label for="pricePerKg">元/公斤：</label>
-        <input type="text" id="pricePerKg" value="0" onclick="setActiveInput('pricePerKg')"> -->
-
-        <!-- <div class="result" id="result"></div> -->
         <div class="keyboard">
             <div class="key item7" onclick="appendToPrice('7')">7</div>
             <div class="key item8" onclick="appendToPrice('8')">8</div>
@@ -189,22 +177,6 @@
     </div>
 
     <script>
-        /*function convertPrice() {
-            var pricePerJinInput = document.getElementById('pricePerJin');
-            var pricePerKgInput = document.getElementById('pricePerKg');
-            var result = document.getElementById('result');
-
-            var pricePerJin = parseFloat(pricePerJinInput.value);
-            var pricePerKg = parseFloat(pricePerKgInput.value);
-
-            if (!isNaN(pricePerJin) && !isNaN(pricePerKg)) {
-                var convertedPricePerKg = pricePerJin * 2;
-                var convertedPricePerJin = pricePerKg / 2;
-                result.textContent = `换算结果：${convertedPricePerKg.toFixed(2)} 元/公斤 = ${convertedPricePerJin.toFixed(2)} 元/斤`;
-            } else {
-                result.textContent = '';
-            }
-        }*/
 
         function deleteLastCharacter() {
             var activeInput = document.querySelector('.active-input');
@@ -216,7 +188,6 @@
         function convertPrice(idInput) {
             var pricePerJinInput = document.getElementById('pricePerJin');
             var pricePerKgInput = document.getElementById('pricePerKg');
-            // var result = document.getElementById('result');
 
             var pricePerJin = parseFloat(pricePerJinInput.value);
             var pricePerKg = parseFloat(pricePerKgInput.value);
@@ -228,20 +199,11 @@
                 var convertedPricePerJin = pricePerKg / 2;
                 pricePerJinInput.value = convertedPricePerJin;
             }
-
-            /*if (!isNaN(pricePerJin) && !isNaN(pricePerKg)) {
-                var convertedPricePerKg = pricePerJin * 2;
-                var convertedPricePerJin = pricePerKg / 2;
-                result.textContent = `换算结果：${convertedPricePerKg.toFixed(2)} 元/公斤 = ${convertedPricePerJin.toFixed(2)} 元/斤`;
-            } else {
-                result.textContent = '';
-            }*/
         }
 
         function appendToPrice(value) { //有bug，当第一次输入"."点符号时，前面没有数字。第二，小数点可以多次输入，如：5.25.64
             var activeInput = document.querySelector('.active-input');
 
-            // if (typeof value !== 'string' && value.length !== 1) {
             if (value.length !== 1) {
                 clearPrice();
             }
@@ -260,29 +222,12 @@
                   // console.log("输入框的值包含小数点");
                 } else {
                     newValue = value;
-                  // console.log("输入框的值不包含小数点");
                 }
-
-                /*var newValue = value;
-                if (value === '.') {
-                    // 使用parseFloat函数将输入的值转换为浮点数
-                    var floatValue = parseFloat(activeInput.value);
-
-                    // 判断转换后的值是否为小数
-                    if (floatValue % 1 !== 0) {
-                        // console.log("输入框的值是小数");
-                        newValue = '';
-                    } else {
-                        newValue = value;
-                        // console.log("输入框的值不是小数");
-                    }
-                }*/
 
                 if ((activeInput.value === '0') && (value === '.')) {
                     newValue = '0.';
                 }
                 activeInput.value = activeInput.value === '0' ? newValue : activeInput.value + newValue;
-                // activeInput.value = activeInput.value === '0' ? value : activeInput.value + value;
                 convertPrice(activeInput.id);
             }
         }
@@ -303,8 +248,6 @@
             for (var i = 0; i < inputs.length; i++) {
                 inputs[i].value = '0';
             }
-
-            // convertPrice();
         }
     </script>
 </body>
