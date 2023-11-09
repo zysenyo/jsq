@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>商品查询</title>
+    <style>
+        tbody tr:nth-child(odd) {
+            background-color: rgb(0 0 0 / 10%); /* green, 10% alpha */
+        }
+        tbody tr:nth-child(even) {
+            background-color: rgb(239 239 239 / 30%); /* red, 30% alpha */
+        }
+    </style>
+    <script>
+        function searchProduct() {
+            var inputName = document.getElementById("name").value.toLowerCase();
+            var inputBarcode = document.getElementById("barcode").value;
+
+            var products = [
+                { name: "苹果", barcode: "1234567890", spec: "大", flavor: "甜", price: 5.99 },
+                { name: "香蕉", barcode: "0987654321", spec: "中", flavor: "香", price: 3.99 },
+                { name: "橙子", barcode: "5678901234", spec: "小", flavor: "酸", price: 4.99 },
+                { name: "娃哈哈饮用纯净水", barcode: "434571453", spec: "596ml", flavor: "无", price: "1.5/瓶，35/24瓶/箱" }
+            ];
+
+            var result = products.filter(function(product) {
+                // return (product.name.toLowerCase().includes(inputName) || product.barcode.endsWith(inputBarcode));
+                return (product.name.toLowerCase().includes(inputName) && product.barcode.endsWith(inputBarcode));
+                // if (product.name.toLowerCase().includes(inputName) && product.barcode.endsWith(inputBarcode)) {
+                //     return (product.name.toLowerCase().includes(inputName) || product.barcode.endsWith(inputBarcode));
+                // }
+            });
+
+            if (result.length > 0) {
+                var output = "<table><tr><th>名称</th><th>条码</th><th>规格</th><th>口味</th><th>价格</th></tr>";
+                for (var i = 0; i < result.length; i++) {
+                    output += "<tr><td>" + result[i].name + "</td><td>" + result[i].barcode + "</td><td>" + result[i].spec + "</td><td>" + result[i].flavor + "</td><td>" + result[i].price + "</td></tr>";
+                }
+                output += "</table>";
+                document.getElementById("output").innerHTML = output;
+            } else {
+                document.getElementById("output").innerHTML = "未找到匹配的商品";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>商品查询</h1>
+    <label for="name">名称：</label>
+    <input type="text" id="name">
+    <br>
+    <label for="barcode">条码后4位：</label>
+    <input type="text" id="barcode">
+    <br>
+    <button onclick="searchProduct()">查询</button>
+    <br>
+    <div id="output"></div>
+</body>
+</html>
