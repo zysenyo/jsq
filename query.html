@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>商品查询</title>
     <style>
         tbody tr:nth-child(odd) {
@@ -8,6 +9,48 @@
         }
         tbody tr:nth-child(even) {
             background-color: rgb(239 239 239 / 30%); /* red, 30% alpha */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 5vw;
+        }
+
+        .container {
+            margin: 0 auto;
+        }
+        .nav {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /*grid-template-rows: repeat(2, 66px);*/
+            grid-gap: 3px;
+        }
+        .nav li {
+            padding: 10px;
+            text-align: center;
+            background-color: #f1f1f1;
+            list-style: none;
+            /*display: inline-table;*/
+            cursor: pointer;
+        }
+        .nav li a {
+            display: block;
+            text-decoration: none;
+            color: #000;
+        }
+        .condition {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 3px;
+        }
+        .condition li {
+            padding: 10px;
+            list-style: none;
+        }
+        input {
+            width: 66%;
+            font-size: 4vw;
+            -webkit-tap-highlight-color: transparent;
         }
     </style>
     <script>
@@ -44,15 +87,18 @@
     </script>
 </head>
 <body>
-    <h1>商品查询</h1>
-    <label for="name">名称：</label>
-    <input type="text" id="name">
-    <br>
-    <label for="barcode">条码后4位：</label>
-    <input type="text" id="barcode">
-    <br>
-    <button onclick="searchProduct()">查询</button>
-    <br>
-    <div id="output"></div>
+    <div class="container">
+        <div class="nav">
+            <li><a href="index.html">单位换算</a></li>
+            <li><a href="query.html">商品查询</a></li>
+        </div>
+        <div class="condition">
+            <li><label for="name">名称：</label><input type="text" id="name"></li>
+            <li><label for="barcode">条码：</label><input type="text" id="barcode"></li>
+        </div>
+        <button onclick="searchProduct()">查询</button>
+
+        <div id="output"></div>
+    </div>
 </body>
 </html>
