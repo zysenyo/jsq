@@ -40,28 +40,43 @@
         }
         .condition {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-gap: 3px;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(2, 66px);
+            grid-gap: 10px;
+            margin-top: 20px;
         }
-        .condition li {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            padding: 10px;
-            list-style: none;
-        }
-        .condition li label {
+        .chaxun {
             grid-column-start: 1;
             grid-column-end: 2;
+            grid-row-start: 1;
+            grid-row-end:3;
         }
-        .condition li input {
+        .condition input {
             grid-column-start: 2;
-            grid-column-end: 4;
+            grid-column-end: 7;
+        }
+        #name {
+            grid-row-start: 1;
+            grid-row-end:2;
+        }
+        #barcode {
+            grid-row-start: 2;
+            grid-row-end:3;
         }
         input {
             font-size: 4vw;
             -webkit-tap-highlight-color: transparent;
             border: 1px solid #ccc;
             border-radius: 5px;
+        }
+        .chaxun {
+            display: flex;
+            align-items: center; /* 垂直居中 */
+            justify-content: center; /* 水平居中 */
+            background-color: #ccc;
+        }
+        #output {
+            margin-top: 20px;
         }
     </style>
     <script>
@@ -104,10 +119,13 @@
             <li><a href="query.html">商品查询</a></li>
         </div>
         <div class="condition">
-            <li><label for="name">名称：</label><input type="text" id="name"></li>
-            <li><label for="barcode">条码：</label><input type="text" id="barcode"></li>
+            <div class="chaxun" onclick="searchProduct()">查询</div>
+            <input type="text" id="name" placeholder="请输入名称">
+            <input type="text" id="barcode" placeholder="请输入条码">
+            <!-- <li><label for="name">名称：</label><input type="text" id="name"></li> -->
+            <!-- <li><label for="barcode">条码：</label><input type="text" id="barcode"></li> -->
         </div>
-        <button onclick="searchProduct()">查询</button>
+        
 
         <div id="output"></div>
     </div>
