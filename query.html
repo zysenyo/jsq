@@ -44,11 +44,20 @@
             grid-gap: 3px;
         }
         .condition li {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             padding: 10px;
             list-style: none;
         }
+        .condition li label {
+            grid-column-start: 1;
+            grid-column-end: 2;
+        }
+        .condition li input {
+            grid-column-start: 2;
+            grid-column-end: 4;
+        }
         input {
-            width: 66%;
             font-size: 4vw;
             -webkit-tap-highlight-color: transparent;
             border: 1px solid #ccc;
