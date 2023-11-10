@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>单价换算</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            /*padding: 20px;*/
+            /*font-size: 16px;*/
+            font-size: 5vw;
+        }
+
+        .container {
+            /*max-width: 320px;*/
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            font-size: 5vw;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 66px);
+            grid-gap: 3px;
+            margin-top: 20px;
+        }
+
+        .key {
+            display: flex;
+            align-items: center; /* 垂直居中 */
+            justify-content: center; /* 水平居中 */
+            padding: 10px;
+            background-color: #ccc;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent; /* 禁用点击时的高亮效果 */
+        }
+
+        .item-qc {
+            grid-column-start: 4;
+            grid-column-end: 5;
+            grid-row-start: 1;
+            grid-row-end:3;
+        }
+
+        .item-tg {
+            grid-column-start: 4;
+            grid-column-end: 5;
+            grid-row-start: 3;
+            grid-row-end:5;
+        }
+
+        .item0 {
+            grid-column-start: 1;
+            grid-column-end: 3;
+            grid-row-start: 4;
+            grid-row-end:5;
+        }
+
+        .changyong {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 3px;
+            margin-top: 20px;
+        }
+
+        .key-cy {
+            padding: 10px;
+            text-align: center;
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        .active-input {
+            color: red;
+        }
+
+        input {
+            width: 50%;
+            text-align: right;
+            border: none;
+            /*font-size: 16px;*/
+            font-size: 5vw;
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent; /* 禁用点击时的高亮效果 */
+        }
+
+        input:focus {
+          outline: none;
+        }
+
+        .shuru {
+          display: flex;
+          align-items: center; /* 垂直居中对齐 */
+          margin-top: 20px;
+        }
+
+        .Jin,
+        .Kg {
+          display: flex;
+          align-items: center; /* 垂直居中对齐 */
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          padding: 10px 1px;
+          width: 50%;
+        }
+
+        .Jin i,
+        .Kg i {
+            margin-left: 5px; /* 调整图标与文字之间的间距 */
+            font-style: normal;
+            color: #a7a7a7;
+            /*font-size: 14px;*/
+            font-size: 3vw;
+        }
+
+        .fh {
+            padding: 0px 8px;
+        }
+        .nav {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /*grid-template-rows: repeat(2, 66px);*/
+            grid-gap: 3px;
+        }
+        .nav li {
+            padding: 10px;
+            text-align: center;
+            background-color: #f1f1f1;
+            list-style: none;
+            /*display: inline-table;*/
+            cursor: pointer;
+        }
+        .nav li a {
+            display: block;
+            text-decoration: none;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <li><a href="index.html">单位换算</a></li>
+            <li><a href="query.html">商品查询</a></li>
+        </div>
+        <div class="shuru">
+            <div class="Jin">
+                <input type="text" id="pricePerJin" value="0" onclick="setActiveInput('pricePerJin')" class="active-input" autofocus readonly>
+                <i>元/斤</i>
+            </div>
+            <i class="fh">=></i>
+            <div class="Kg">
+                <input type="text" id="pricePerKg" value="0" onclick="setActiveInput('pricePerKg')" readonly>
+                <i>元/公斤</i>
+            </div>
+        </div>
+        <div class="keyboard">
+            <div class="key item7" onclick="appendToPrice('7')">7</div>
+            <div class="key item8" onclick="appendToPrice('8')">8</div>
+            <div class="key item9" onclick="appendToPrice('9')">9</div>
+            <div class="key item-qc" onclick="clearPrice()">清除</div>
+            <div class="key item4" onclick="appendToPrice('4')">4</div>
+            <div class="key item5" onclick="appendToPrice('5')">5</div>
+            <div class="key item6" onclick="appendToPrice('6')">6</div>
+            <div class="key item1" onclick="appendToPrice('1')">1</div>
+            <div class="key item2" onclick="appendToPrice('2')">2</div>
+            <div class="key item3" onclick="appendToPrice('3')">3</div>
+            <div class="key item-tg" onclick="deleteLastCharacter()">←</div>
+            <div class="key item0" onclick="appendToPrice('0')">0</div>
+            <div class="key item-d" onclick="appendToPrice('.')">.</div>
+        </div>
+        <div class="changyong">
+            <!-- <div class="key-cy" onclick="appendToPrice('.8')">.8</div>
+            <div class="key-cy" onclick="appendToPrice('.9')">.9</div>
+            <div class="key-cy" onclick="appendToPrice('.88')">.88</div>
+            <div class="key-cy" onclick="appendToPrice('.98')">.98</div> -->
+            <div class="key-cy" onclick="appendToPrice('1.98')">1.98</div>
+            <div class="key-cy" onclick="appendToPrice('2.98')">2.98</div>
+            <div class="key-cy" onclick="appendToPrice('12.8')">12.8</div>
+            <div class="key-cy" onclick="appendToPrice('18.8')">18.8</div>
+            <div class="key-cy" onclick="appendToPrice('19.8')">19.8</div>
+            <div class="key-cy" onclick="appendToPrice('28.8')">28.8</div>
+            <div class="key-cy" onclick="appendToPrice('53')">53</div>
+            <div class="key-cy" onclick="appendToPrice('43')">43</div>
+            <div class="key-cy" onclick="appendToPrice('16.8')">16.8</div>
+            <div class="key-cy" onclick="appendToPrice('.88')">.88</div>
+            <div class="key-cy" onclick="appendToPrice('.98')">.98</div>
+        </div>
+        
+        
+    </div>
+
+    <script>
+
+    </script>
+</body>
+</html>
