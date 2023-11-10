@@ -41,15 +41,26 @@
         .condition {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(2, 66px);
-            grid-gap: 10px;
+            grid-template-rows: repeat(2, 44px);
+            grid-gap: 5px;
             margin-top: 20px;
         }
         .chaxun {
+            display: flex;
+            align-items: center; /* 垂直居中 */
+            justify-content: center; /* 水平居中 */
+            background-color: #ccc;
+            grid-column-start: 1;
+            grid-column-end: 2;
+            grid-row-start: 2;
+            grid-row-end:3;
+        }
+        .qk {
             grid-column-start: 1;
             grid-column-end: 2;
             grid-row-start: 1;
-            grid-row-end:3;
+            grid-row-end:2;
+            background-color: #ccc;
         }
         .condition input {
             grid-column-start: 2;
@@ -68,12 +79,6 @@
             -webkit-tap-highlight-color: transparent;
             border: 1px solid #ccc;
             border-radius: 5px;
-        }
-        .chaxun {
-            display: flex;
-            align-items: center; /* 垂直居中 */
-            justify-content: center; /* 水平居中 */
-            background-color: #ccc;
         }
         #output {
             margin-top: 20px;
@@ -110,6 +115,10 @@
                 document.getElementById("output").innerHTML = "未找到匹配的商品";
             }
         }
+
+        function clearInput(){
+            //清空
+        }
     </script>
 </head>
 <body>
@@ -119,6 +128,7 @@
             <li><a href="query.html">商品查询</a></li>
         </div>
         <div class="condition">
+            <div class="qk" onclick="clearInput()">清空</div>
             <div class="chaxun" onclick="searchProduct()">查询</div>
             <input type="text" id="name" placeholder="请输入名称">
             <input type="text" id="barcode" placeholder="请输入条码">
