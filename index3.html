@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>单价换算</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <li><a href="index.html">单位换算</a></li>
+            <li><a href="query.html">商品查询</a></li>
+        </div>
+        <div class="shuru">
+            <div class="Jin">
+                <input type="text" id="pricePerJin" value="0" onclick="setActiveInput('pricePerJin')" class="active-input" autofocus readonly>
+                <i>元/斤</i>
+            </div>
+            <i class="fh">=></i>
+            <div class="Kg">
+                <input type="text" id="pricePerKg" value="0" onclick="setActiveInput('pricePerKg')" readonly>
+                <i>元/公斤</i>
+            </div>
+        </div>
+        <div class="keyboard">
+            <div class="key item7" onclick="appendToPrice('7')">7</div>
+            <div class="key item8" onclick="appendToPrice('8')">8</div>
+            <div class="key item9" onclick="appendToPrice('9')">9</div>
+            <div class="key item-qc" onclick="clearPrice()">清除</div>
+            <div class="key item4" onclick="appendToPrice('4')">4</div>
+            <div class="key item5" onclick="appendToPrice('5')">5</div>
+            <div class="key item6" onclick="appendToPrice('6')">6</div>
+            <div class="key item1" onclick="appendToPrice('1')">1</div>
+            <div class="key item2" onclick="appendToPrice('2')">2</div>
+            <div class="key item3" onclick="appendToPrice('3')">3</div>
+            <div class="key item-tg" onclick="deleteLastCharacter()">←</div>
+            <div class="key item0" onclick="appendToPrice('0')">0</div>
+            <div class="key item-d" onclick="appendToPrice('.')">.</div>
+        </div>
+        <div class="changyong">
+            <!-- <div class="key-cy" onclick="appendToPrice('.8')">.8</div>
+            <div class="key-cy" onclick="appendToPrice('.9')">.9</div>
+            <div class="key-cy" onclick="appendToPrice('.88')">.88</div>
+            <div class="key-cy" onclick="appendToPrice('.98')">.98</div> -->
+            <div class="key-cy" onclick="appendToPrice('1.98')">1.98</div>
+            <div class="key-cy" onclick="appendToPrice('2.98')">2.98</div>
+            <div class="key-cy" onclick="appendToPrice('12.8')">12.8</div>
+            <div class="key-cy" onclick="appendToPrice('18.8')">18.8</div>
+            <div class="key-cy" onclick="appendToPrice('19.8')">19.8</div>
+            <div class="key-cy" onclick="appendToPrice('28.8')">28.8</div>
+            <div class="key-cy" onclick="appendToPrice('53')">53</div>
+            <div class="key-cy" onclick="appendToPrice('43')">43</div>
+            <div class="key-cy" onclick="appendToPrice('16.8')">16.8</div>
+            <div class="key-cy" onclick="appendToPrice('.88')">.88</div>
+            <div class="key-cy" onclick="appendToPrice('.98')">.98</div>
+        </div>
+        
+        
+    </div>
+
+    <script>
+
+        function deleteLastCharacter() {
+            var activeInput = document.querySelector('.active-input');
+            activeInput.value = activeInput.value.slice(0, -1);
+            if (activeInput.value === '') activeInput.value = '0';
+            convertPrice(activeInput.id);
+        }
+
+        function convertPrice(idInput) {
+            var pricePerJinInput = document.getElementById('pricePerJin');
+            var pricePerKgInput = document.getElementById('pricePerKg');
+
+            var pricePerJin = parseFloat(pricePerJinInput.value);
+            var pricePerKg = parseFloat(pricePerKgInput.value);
+
+            if (idInput === 'pricePerJin') {
+                var convertedPricePerKg = pricePerJin * 2;
+                pricePerKgInput.value = convertedPricePerKg;
+            }else{
+                var convertedPricePerJin = pricePerKg / 2;
+                pricePerJinInput.value = convertedPricePerJin;
+            }
+        }
+
+        function appendToPrice(value) { //有bug，当第一次输入"."点符号时，前面没有数字。第二，小数点可以多次输入，如：5.25.64
+            var activeInput = document.querySelector('.active-input');
+
+            if (value.length !== 1 && value !== '.88' && value !== '.98') {
+                clearPrice();
+            }
+            
+
+            if (activeInput !== null) {
+                var newValue = value;
+
+                // 定义匹配小数点的正则表达式
+                var decimalPattern = /\./;
+
+                // 使用正则表达式进行匹配
+                if (decimalPattern.test(activeInput.value)) {
+                    // activeInput.value = value === '.' ? activeInput.value : activeInput.value + value;
+                    if (value !== '.') {
+                        if (value === '.88' || value === '.98') {
+                            value = '';
+                        }
+                        activeInput.value = activeInput.value + value;
+                    }
+                    newValue = '';
+                  // console.log("输入框的值包含小数点");
+                } else {
+                    if (activeInput.value === '0' && (value === '.88' || value === '.98')) {
+                        newValue = activeInput.value + value;
+                    } else {
+                        newValue = value;
+                    }
+                }
+
+                if ((activeInput.value === '0') && (value === '.')) {
+                    newValue = '0.';
+                }
+                activeInput.value = activeInput.value === '0' ? newValue : activeInput.value + newValue;
+                convertPrice(activeInput.id);
+            }
+        }
+
+        function setActiveInput(inputId) {
+            var inputs = document.querySelectorAll('input');
+            
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].classList.remove('active-input');
+            }
+
+            document.getElementById(inputId).classList.add('active-input');
+        }
+
+        function clearPrice() {
+            var inputs = document.querySelectorAll('input');
+
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].value = '0';
+            }
+        }
+    </script>
+</body>
+</html>
