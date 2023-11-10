@@ -174,10 +174,24 @@
           inputStream : {
             name : "Live",
             type : "LiveStream",
-            target: scannerContainer
+            target: scannerContainer,
+            constraints: {
+              width: { min: 640 },
+              height: { min: 480 }
+            }
           },
-          decoder : {
-            readers : ["ean_reader", "upc_reader"]
+          locate: true, // 启用图像定位
+          numOfWorkers: navigator.hardwareConcurrency || 1,
+          locator: {
+            patchSize: "large" // 增大 patchSize
+          },
+          decoder: {
+            readers: [{
+              format: "ean_reader",
+              config: {
+                supplements: ['ean_5_reader', 'ean_2_reader'] // 启用辅助解码器
+              }
+            }]
           }
         }, function(err) {
             if (err) {
