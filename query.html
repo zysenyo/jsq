@@ -170,6 +170,8 @@
         const scannerContainer = document.getElementById('scanner-container');
         scannerContainer.style.display = 'block';
 
+        setScanBoxSize();
+
         Quagga.init({
           inputStream : {
             name : "Live",
@@ -220,7 +222,7 @@
        }
 
        // 页面加载时设置初始扫描区域大小
-       window.addEventListener("DOMContentLoaded", setScanBoxSize);
+       // window.addEventListener("DOMContentLoaded", setScanBoxSize);
     </script>
 </body>
 </html>
