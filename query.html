@@ -185,7 +185,7 @@
           locate: false, // 启用图像定位
           numOfWorkers: navigator.hardwareConcurrency || 1,
           locator: {
-            // patchSize: "large", // 增大 patchSize
+            patchSize: "large", // 增大 patchSize
             full_sample: true
           },
           decoder: {
@@ -197,10 +197,12 @@
                 return;
             }
             console.log("初始化成功");
-            
-            Quagga.start();
+
             Quagga.canvas.dom.overlay.style.width = 300px;
             Quagga.canvas.dom.overlay.style.height = 100px;
+            
+            Quagga.start();
+            
         });
 
         scanner = Quagga.onDetected(function(result) {
