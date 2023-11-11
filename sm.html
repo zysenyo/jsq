@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Barcode Scanner Example</title>
+</head>
+<body>
+  <input type="text" id="barcodeInput" placeholder="扫描结果将显示在这里">
+
+  <script src="https://unpkg.com/@dynamsoft/barcode-reader"></script>
+  <script>
+    // 获取输入框元素
+    var barcodeInput = document.getElementById('barcodeInput');
+
+    // 创建Barcode Reader实例
+    var scanner = new dynamsoft.BarcodeReader();
+
+    // 扫描成功后的回调函数
+    scanner.onFrameRead = function (results) {
+      if (results.length > 0) {
+        // 获取扫描结果
+        var barcodeResult = results[0];
+        var barcodeText = barcodeResult.BarcodeText;
+
+        // 将扫描结果显示在输入框中
+        barcodeInput.value = barcodeText;
+
+        // 停止扫描
+        scanner.stop();
+      }
+    };
+
+    // 启动摄像头进行扫描
+    scanner.start(document.body);
+
+    // 当窗口关闭时停止扫描
+    window.addEventListener('beforeunload', function () {
+      scanner.stop();
+    });
+  </script>
+</body>
+</html>
