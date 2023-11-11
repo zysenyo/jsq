@@ -98,6 +98,10 @@
         .nav li.curr {
             background-color: #ccc;
         }
+        #scanner-container {
+            width: 100%;
+            height: 200px;
+        }
     </style>
     <script>
         function searchProduct() {
@@ -170,7 +174,7 @@
         const scannerContainer = document.getElementById('scanner-container');
         scannerContainer.style.display = 'block';
 
-        setScanBoxSize();
+        // setScanBoxSize();
 
         Quagga.init({
           inputStream : {
@@ -178,10 +182,11 @@
             type : "LiveStream",
             target: scannerContainer
           },
-          locate: true, // 启用图像定位
+          locate: false, // 启用图像定位
           numOfWorkers: navigator.hardwareConcurrency || 1,
           locator: {
-            patchSize: "large" // 增大 patchSize
+            patchSize: "large", // 增大 patchSize
+            full_sample: true
           },
           decoder: {
             readers: ["ean_reader"] // 可根据需要添加其他读取器
@@ -212,14 +217,14 @@
       }
 
       // 设置扫描区域大小
-      function setScanBoxSize() {
+      /*function setScanBoxSize() {
           var width = scanner-container.offsetWidth;
           var height = scanner-container.offsetHeight;
           Quagga.canvas.dom.overlay.style.width = width + "px";
           Quagga.canvas.dom.overlay.style.height = height + "px";
           Quagga.canvas.dom.overlay.style.left = scanner-container.offsetLeft + "px";
           Quagga.canvas.dom.overlay.style.top = scanner-container.offsetTop + "px";
-       }
+       }*/
 
        // 页面加载时设置初始扫描区域大小
        // window.addEventListener("DOMContentLoaded", setScanBoxSize);
