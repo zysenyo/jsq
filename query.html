@@ -198,8 +198,8 @@
             }
             console.log("初始化成功");
 
-            Quagga.canvas.dom.overlay.style.width = 300px;
-            Quagga.canvas.dom.overlay.style.height = 100px;
+            Quagga.canvas.dom.overlay.setAttribute("style", "width: 300px !important");
+            Quagga.canvas.dom.overlay.setAttribute("style", "height: 100px !important");
             
             Quagga.start();
             
