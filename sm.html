@@ -2,40 +2,69 @@
 <html>
 <head>
   <title>Barcode Scanner Example</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 </head>
 <body>
+  <div id="scannerContainer">
+    <div id="scanBox"></div>
+  </div>
   <input type="text" id="barcodeInput" placeholder="扫描结果将显示在这里">
 
-  <script src="https://unpkg.com/@dynamsoft/barcode-reader"></script>
   <script>
     // 获取输入框元素
     var barcodeInput = document.getElementById('barcodeInput');
 
-    // 创建Barcode Reader实例
-    var scanner = new dynamsoft.BarcodeReader();
+    // 创建扫描区域容器
+    var scannerContainer = document.getElementById("scannerContainer");
+    var scanBox = document.getElementById("scanBox");
 
-    // 扫描成功后的回调函数
-    scanner.onFrameRead = function (results) {
-      if (results.length > 0) {
-        // 获取扫描结果
-        var barcodeResult = results[0];
-        var barcodeText = barcodeResult.BarcodeText;
-
-        // 将扫描结果显示在输入框中
-        barcodeInput.value = barcodeText;
-
-        // 停止扫描
-        scanner.stop();
+    // 配置QuaggaJS
+    Quagga.init({
+      inputStream: {
+        name: "Live",
+        type: "LiveStream",
+        target: scannerContainer
+      },
+      decoder: {
+        readers: ["ean_reader", "upc_reader"] // 可根据需要添加其他读取器
+      },
+      locator: {
+        patchSize: "medium" // 设置扫描区域大小为中等尺寸
       }
-    };
+    }, function (err) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      // 启动QuaggaJS
+      Quagga.start();
 
-    // 启动摄像头进行扫描
-    scanner.start(document.body);
+      // 监听扫描事件
+      Quagga.onDetected(function (result) {
+        var code = result.codeResult.code;
+        barcodeInput.value = code; // 将扫描结果显示在输入框中
+        Quagga.stop(); // 停止扫描
 
-    // 当窗口关闭时停止扫描
-    window.addEventListener('beforeunload', function () {
-      scanner.stop();
+        // 移除扫描区域容器
+        scannerContainer.parentNode.removeChild(scannerContainer);
+      });
     });
+
+    // 设置扫描区域大小
+    function setScanBoxSize() {
+      var width = scanBox.offsetWidth;
+      var height = scanBox.offsetHeight;
+      Quagga.canvas.dom.overlay.style.width = width + "px";
+      Quagga.canvas.dom.overlay.style.height = height + "px";
+      Quagga.canvas.dom.overlay.style.left = scanBox.offsetLeft + "px";
+      Quagga.canvas.dom.overlay.style.top = scanBox.offsetTop + "px";
+    }
+
+    // 页面加载时设置初始扫描区域大小
+    window.addEventListener("DOMContentLoaded", setScanBoxSize);
+
+    // 窗口大小改变时重新设置扫描区域大小
+    window.addEventListener("resize", setScanBoxSize);
   </script>
 </body>
 </html>
