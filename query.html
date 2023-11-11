@@ -182,7 +182,7 @@
             patchSize: "large" // 增大 patchSize
           },
           decoder: {
-            readers: ["ean_reader", "upc_reader"] // 可根据需要添加其他读取器
+            readers: ["ean_reader"] // 可根据需要添加其他读取器
           }
         }, function(err) {
             if (err) {
@@ -208,6 +208,19 @@
         Quagga.stop();
         scanner.clear();
       }
+
+      // 设置扫描区域大小
+      function setScanBoxSize() {
+          var width = scanner-container.offsetWidth;
+          var height = scanner-container.offsetHeight;
+          Quagga.canvas.dom.overlay.style.width = width + "px";
+          Quagga.canvas.dom.overlay.style.height = height + "px";
+          Quagga.canvas.dom.overlay.style.left = scanner-container.offsetLeft + "px";
+          Quagga.canvas.dom.overlay.style.top = scanner-container.offsetTop + "px";
+       }
+
+       // 页面加载时设置初始扫描区域大小
+       window.addEventListener("DOMContentLoaded", setScanBoxSize);
     </script>
 </body>
 </html>
