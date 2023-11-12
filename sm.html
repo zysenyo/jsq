@@ -2,11 +2,16 @@
 <html>
   <head>
     <title>摄像头条形码识别</title>
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <style>
+      #video {
+        width: 100%;
+        height: auto;
+      }
+    </style>
   </head>
   <body>
-    <video id="video" width="640" height="480" autoplay></video>
-    <canvas id="canvas" style="display:none;"></canvas>
+    <video id="video" autoplay></video>
     
     <script>
       // 获取video元素
@@ -17,39 +22,40 @@
         navigator.mediaDevices.getUserMedia({ video: true })
           .then(function(stream) {
             video.srcObject = stream;
+            
+            // 在视频播放时进行回调
+            video.addEventListener('play', function() {
+              setInterval(function() {
+                // 创建一个canvas元素
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                
+                // 设置canvas尺寸和视频尺寸相等
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                
+                // 将当前视频帧绘制到canvas上
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                // 读取条形码数据
+                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                  inversionAttempts: "dontInvert",
+                });
+                
+                // 输出识别结果
+                if (code) {
+                  console.log('识别到的条形码：', code.data);
+                } else {
+                  console.log('未能识别到条形码');
+                }
+              }, 1000); // 每秒进行一次识别，可以根据需要调整时间间隔
+            });
           })
           .catch(function(error) {
             console.log("无法获取摄像头视频流：" + error);
           });
       }
-      
-      // 在视频播放时进行回调
-      video.addEventListener('play', function() {
-        // 创建一个Canvas元素
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext('2d');
-        
-        // 设置Canvas尺寸和视频尺寸相等
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        
-        // 定时进行条形码识别
-        setInterval(function() {
-          // 将当前视频帧绘制到Canvas上
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          
-          // 读取条形码数据
-          var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          var barcode = jsQR(imageData.data, imageData.width, imageData.height);
-          
-          // 输出识别结果
-          if (barcode) {
-            console.log('识别到的条形码：', barcode.data);
-          } else {
-            console.log('未能识别到条形码');
-          }
-        }, 1000); // 每秒进行一次识别，可以根据需要调整时间间隔
-      });
     </script>
   </body>
 </html>
