@@ -32,7 +32,7 @@
             var capabilities = track.getCapabilities();
 
             // 检查是否支持手动对焦
-            if ('focusMode' in capabilities && capabilities.focusMode.length > 1) {
+            if ('focusMode' in capabilities && Array.isArray(capabilities.focusMode)) {
                 // 切换到手动对焦模式
                 track.applyConstraints({ advanced: [{ focusMode: 'manual' }] })
                     .catch(function(error) {
