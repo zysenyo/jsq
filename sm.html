@@ -5,6 +5,7 @@
 </head>
 <body>
     <div id="video-container">
+        <div id="xsh"></div>
         <video id="video" width="100%" height="auto"></video>
         <canvas id="canvas" style="display:none;"></canvas>
     </div>
@@ -15,6 +16,7 @@
         var video = document.getElementById('video');
         var canvas = document.getElementById('canvas');
         var focusButton = document.getElementById('focus-button');
+        var xs = document.getElementById('xsh');
 
         // 获取用户摄像头访问权限并播放视频流
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -23,7 +25,8 @@
                 video.play();
             })
             .catch(function(error) {
-                console.log('无法访问摄像头：', error);
+                // console.log('无法访问摄像头：', error);
+                xs.html = "无法访问摄像头：" + error;
             });
 
         // 手动对焦事件处理程序
@@ -36,10 +39,12 @@
                 // 切换到手动对焦模式
                 track.applyConstraints({ advanced: [{ focusMode: 'manual' }] })
                     .catch(function(error) {
-                        console.log('无法切换到手动对焦模式：', error);
+                        // console.log('无法切换到手动对焦模式：', error);
+                        xs.html = "无法切换到手动对焦模式：" + error;
                     });
             } else {
-                console.log('摄像头不支持手动对焦。');
+                // console.log('摄像头不支持手动对焦。');
+                xs.html = "摄像头不支持手动对焦。";
             }
         });
     </script>
