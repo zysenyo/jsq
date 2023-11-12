@@ -1,61 +1,47 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>摄像头条形码识别</title>
-    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
-    <style>
-      #video {
-        width: 100%;
-        height: auto;
-      }
-    </style>
-  </head>
-  <body>
-    <video id="video" autoplay></video>
-    
+<head>
+    <title>手动对焦</title>
+</head>
+<body>
+    <div id="video-container">
+        <video id="video" width="100%" height="auto"></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+
+    <button id="focus-button">手动对焦</button>
+
     <script>
-      // 获取video元素
-      var video = document.getElementById('video');
-      
-      // 检测浏览器是否支持getUserMedia
-      if (navigator.mediaDevices.getUserMedia) {
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var focusButton = document.getElementById('focus-button');
+
+        // 获取用户摄像头访问权限并播放视频流
         navigator.mediaDevices.getUserMedia({ video: true })
-          .then(function(stream) {
-            video.srcObject = stream;
-            
-            // 在视频播放时进行回调
-            video.addEventListener('play', function() {
-              setInterval(function() {
-                // 创建一个canvas元素
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                
-                // 设置canvas尺寸和视频尺寸相等
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                
-                // 将当前视频帧绘制到canvas上
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                // 读取条形码数据
-                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                var code = jsQR(imageData.data, imageData.width, imageData.height, {
-                  inversionAttempts: "dontInvert",
-                });
-                
-                // 输出识别结果
-                if (code) {
-                  console.log('识别到的条形码：', code.data);
-                } else {
-                  console.log('未能识别到条形码');
-                }
-              }, 1000); // 每秒进行一次识别，可以根据需要调整时间间隔
+            .then(function(stream) {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function(error) {
+                console.log('无法访问摄像头：', error);
             });
-          })
-          .catch(function(error) {
-            console.log("无法获取摄像头视频流：" + error);
-          });
-      }
+
+        // 手动对焦事件处理程序
+        focusButton.addEventListener('click', function() {
+            var track = video.srcObject.getVideoTracks()[0];
+            var capabilities = track.getCapabilities();
+
+            // 检查是否支持手动对焦
+            if ('focusMode' in capabilities && capabilities.focusMode.length > 1) {
+                // 切换到手动对焦模式
+                track.applyConstraints({ advanced: [{ focusMode: 'manual' }] })
+                    .catch(function(error) {
+                        console.log('无法切换到手动对焦模式：', error);
+                    });
+            } else {
+                console.log('摄像头不支持手动对焦。');
+            }
+        });
     </script>
-  </body>
+</body>
 </html>
