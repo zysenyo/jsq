@@ -18,7 +18,7 @@
     <script>
         var qr=GetQueryString("qrresult");
         if(qr){
-            document.getElementById('barcode-input').value = qr;
+            document.getElementById('barcode-input').value = qr.split(",")[1];
             // alert(qr); //放入表单输入框或者提交到后端，具体根据自己业务做相应处理
             // window.open(qr, "_self"); //打开二维码中的网址
         }
