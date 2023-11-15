@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>手动对焦</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>微信扫一扫</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 5vw;
+        }
+    </style>
 </head>
 <body>
+    <input type="text" id="barcode-input">
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 
     <a href="javascript:window.open('//996315.com/api/scan/?redirect_uri=' + encodeURIComponent(location.href), '_self');">扫一扫</a>
     <script>
         var qr=GetQueryString("qrresult");
         if(qr){
-            alert(qr); //放入表单输入框或者提交到后端，具体根据自己业务做相应处理
-            //window.open(qr, "_self"); //打开二维码中的网址
+            document.getElementById('barcode-input').value = qr;
+            // alert(qr); //放入表单输入框或者提交到后端，具体根据自己业务做相应处理
+            // window.open(qr, "_self"); //打开二维码中的网址
         }
          
         function GetQueryString(name){
