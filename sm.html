@@ -4,49 +4,60 @@
     <title>手动对焦</title>
 </head>
 <body>
-    <div id="video-container">
-        <div id="xsh"></div>
-        <video id="video" width="100%" height="auto"></video>
-        <canvas id="canvas" style="display:none;"></canvas>
-    </div>
-
-    <button id="focus-button">手动对焦</button>
-
+    <input type="button" value="扫一扫" onclick="scan()">
+    <script src="http://cdn.bootcdn.net/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
     <script>
-        var video = document.getElementById('video');
-        var canvas = document.getElementById('canvas');
-        var focusButton = document.getElementById('focus-button');
-        var xs = document.getElementById('xsh');
-
-        // 获取用户摄像头访问权限并播放视频流
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function(stream) {
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch(function(error) {
-                // console.log('无法访问摄像头：', error);
-                xs.html = "无法访问摄像头：" + error;
+        var apiList = [ 'checkJsApi','scanQRCode' ];
+        $(function() {
+            // 向后端请求配置信息
+            $.ajax({
+                type : "GET",
+                url : "/wx-server/wxJsapiSignature",
+                data : {
+                    url : location.href.split('#')[0]
+                },
+                dataType : "json",
+                success : function(res) {
+                    configInfo(res);
+                }
             });
-
-        // 手动对焦事件处理程序
-        focusButton.addEventListener('click', function() {
-            var track = video.srcObject.getVideoTracks()[0];
-            var capabilities = track.getCapabilities();
-
-            // 检查是否支持手动对焦
-            if ('focusMode' in capabilities && Array.isArray(capabilities.focusMode)) {
-                // 切换到手动对焦模式
-                track.applyConstraints({ advanced: [{ focusMode: 'manual' }] })
-                    .catch(function(error) {
-                        // console.log('无法切换到手动对焦模式：', error);
-                        xs.html = "无法切换到手动对焦模式：" + error;
-                    });
-            } else {
-                // console.log('摄像头不支持手动对焦。');
-                xs.html = "摄像头不支持手动对焦。";
-            }
         });
+        // 通过wx.config注入配置信息
+        function configInfo(res) {
+            wx.config({
+                debug : false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                appId : res.appId, // 必填，公众号的唯一标识
+                timestamp : res.timestamp, // 必填，生成签名的时间戳
+                nonceStr : res.nonceStr, // 必填，生成签名的随机串
+                signature : res.signature,// 必填，签名
+                jsApiList : apiList// 必填，需要使用的JS接口列表
+            });
+            // 处理成功后回调
+            wx.ready(function() {
+                console.log("处理成功:");
+                wx.checkJsApi({
+                    jsApiList : apiList,
+                    success : function(checkRes) {
+                        console.log("checkRes:", checkRes);
+                    }
+                });
+            });
+            // 处理失败后回调
+            wx.error(function(err) {
+                console.log("处理失败:", err);
+            });
+        }
+        // 扫一扫
+        function scan() {
+            wx.scanQRCode({
+                needResult : 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                scanType : [ "qrCode", "barCode" ], // 可以指定扫二维码还是一维码，默认二者都有
+                success : function(res) {
+                    alert(res.resultStr);
+                }
+            });
+        }
     </script>
 </body>
 </html>
