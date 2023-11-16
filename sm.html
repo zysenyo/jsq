@@ -40,7 +40,7 @@
         <th>上市年份</th>
       </tr>
     </table>
-    
+    <div id="err"></div>
     <script>
         var qr=GetQueryString("qrresult");
         if(qr){
@@ -64,7 +64,9 @@
             var fullBarcode = "0" + barcode;
             
             // 构建完整的请求地址
-            var requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=" + fullBarcode;
+            //var requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=" + fullBarcode;
+
+            var requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=06901028063364"
             
             // 发起请求
             fetch(requestUrl)
@@ -99,7 +101,8 @@
               })
               .catch(error => {
                 // 处理错误
-                console.error('请求失败', error);
+                  document.getElementById("err").value = '请求失败: ' + error;
+                //console.error('请求失败', error);
               });
         }
     </script>
