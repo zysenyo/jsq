@@ -85,7 +85,9 @@
                 //console.log(data);
                   // 返回的数据
                   //var data = {"Code":1,"Msg":"Success","Data":{"PageIndex":1,"PageSize":30,"TotalCount":1,"TotalPages":1,"HasPreviousPage":false,"HasNextPage":false,"Items":[{"gtin":"06901028063364","specification":"86×55×23","firm_name":"湖南中烟工业有限责任公司","brandcn":"白沙","picture_filename":"/userfile/uploada/gra/sj210521144038405094/06901028063364/06901028063364.1.jpg","description":"白沙(硬新精品二代)","gpcname":"雪茄","saledate":"2018-08-17T05:45:00Z","saledateyear":2018}]}}.Data.Items[0];
-                
+
+                  document.getElementById("err").value = data;
+                  
                   // 构建表格行并插入到表格中
                   var table = document.getElementById("productTable");
                   var row = table.insertRow(-1);
