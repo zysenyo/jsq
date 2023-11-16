@@ -29,7 +29,7 @@
     <h2>商品信息</h2>
     <table id="productTable">
       <tr>
-        <th>条形码</th>
+<!--         <th>条形码</th>
         <th>规格</th>
         <th>企业名称</th>
         <th>品牌名称</th>
@@ -37,7 +37,14 @@
         <th>产品名称</th>
         <th>分类</th>
         <th>上市日期</th>
-        <th>上市年份</th>
+        <th>上市年份</th> -->
+          
+          <th>商品名称</th>
+        <th>条形码</th>
+        <th>预估价格</th>
+        <th>品牌</th>
+        <th>厂商</th>
+        <th>规格</th>
       </tr>
     </table>
     <div id="err"></div>
@@ -61,12 +68,14 @@
             // var barcode = "6901028063364";
             
             // 在商品条形码前面加上0
-            var fullBarcode = "0" + barcode;
+            //var fullBarcode = "0" + barcode;
             
             // 构建完整的请求地址
             //var requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=" + fullBarcode;
 
-            var requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=06901028063364"
+            //var requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=06901028063364";
+
+            var requestUrl = "https://www.mxnzp.com/api/barcode/goods/details?barcode="+ barcode +"&app_id=owphrfqcfkjsfv9e&app_secret=VOgXyOkpMCOvcab0PXliyuLUyFrHdkco";
             
             // 发起请求
             fetch(requestUrl)
@@ -81,23 +90,38 @@
                   var table = document.getElementById("productTable");
                   var row = table.insertRow(-1);
                   var cell1 = row.insertCell(0);
-                  cell1.innerHTML = data.gtin;
+                  cell1.innerHTML = data.goodsName;
                   var cell2 = row.insertCell(1);
-                  cell2.innerHTML = data.specification;
+                  cell2.innerHTML = data.barcode;
                   var cell3 = row.insertCell(2);
-                  cell3.innerHTML = data.firm_name;
+                  cell3.innerHTML = data.price;
                   var cell4 = row.insertCell(3);
-                  cell4.innerHTML = data.brandcn;
+                  cell4.innerHTML = data.brand;
                   var cell5 = row.insertCell(4);
-                  cell5.innerHTML = `<img src="${data.picture_filename}" alt="产品图片" style="width:100px;">`;
+                  cell5.innerHTML = data.supplier;
                   var cell6 = row.insertCell(5);
-                  cell6.innerHTML = data.description;
-                  var cell7 = row.insertCell(6);
-                  cell7.innerHTML = data.gpcname;
-                  var cell8 = row.insertCell(7);
-                  cell8.innerHTML = new Date(data.saledate).toDateString();
-                  var cell9 = row.insertCell(8);
-                  cell9.innerHTML = data.saledateyear;
+                  cell6.innerHTML = data.standard;
+                  
+                  // var table = document.getElementById("productTable");
+                  // var row = table.insertRow(-1);
+                  // var cell1 = row.insertCell(0);
+                  // cell1.innerHTML = data.gtin;
+                  // var cell2 = row.insertCell(1);
+                  // cell2.innerHTML = data.specification;
+                  // var cell3 = row.insertCell(2);
+                  // cell3.innerHTML = data.firm_name;
+                  // var cell4 = row.insertCell(3);
+                  // cell4.innerHTML = data.brandcn;
+                  // var cell5 = row.insertCell(4);
+                  // cell5.innerHTML = `<img src="${data.picture_filename}" alt="产品图片" style="width:100px;">`;
+                  // var cell6 = row.insertCell(5);
+                  // cell6.innerHTML = data.description;
+                  // var cell7 = row.insertCell(6);
+                  // cell7.innerHTML = data.gpcname;
+                  // var cell8 = row.insertCell(7);
+                  // cell8.innerHTML = new Date(data.saledate).toDateString();
+                  // var cell9 = row.insertCell(8);
+                  // cell9.innerHTML = data.saledateyear;
               })
               .catch(error => {
                 // 处理错误
