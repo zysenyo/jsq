@@ -8,13 +8,39 @@
             font-family: Arial, sans-serif;
             font-size: 5vw;
         }
+            table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+        th, td {
+          border: 1px solid black;
+          padding: 8px;
+          text-align: left;
+        }
     </style>
 </head>
 <body>
     <input type="text" id="barcode-input">
+    <div onclick="chxun()">查询</div>
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 
     <a href="javascript:window.open('//996315.com/api/scan/?redirect_uri=' + encodeURIComponent(location.href), '_self');">扫一扫</a>
+
+    <h2>商品信息</h2>
+    <table id="productTable">
+      <tr>
+        <th>条形码</th>
+        <th>规格</th>
+        <th>企业名称</th>
+        <th>品牌名称</th>
+        <th>产品图片</th>
+        <th>产品名称</th>
+        <th>分类</th>
+        <th>上市日期</th>
+        <th>上市年份</th>
+      </tr>
+    </table>
+    
     <script>
         var qr=GetQueryString("qrresult");
         if(qr){
@@ -27,6 +53,54 @@
             var reg = new RegExp("\\b"+ name +"=([^&]*)");
             var r = location.href.match(reg);
             if (r!=null) return decodeURIComponent(r[1]);
+        }
+
+        function chxun(){
+            var barcode = document.getElementById("barcode-input").value;
+            // 获取用户输入的商品条形码
+            // var barcode = "6901028063364";
+            
+            // 在商品条形码前面加上0
+            var fullBarcode = "0" + barcode;
+            
+            // 构建完整的请求地址
+            var requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=" + fullBarcode;
+            
+            // 发起请求
+            fetch(requestUrl)
+              .then(response => response.json())
+              .then(data => {
+                // 处理返回的数据
+                //console.log(data);
+                  // 返回的数据
+                  //var data = {"Code":1,"Msg":"Success","Data":{"PageIndex":1,"PageSize":30,"TotalCount":1,"TotalPages":1,"HasPreviousPage":false,"HasNextPage":false,"Items":[{"gtin":"06901028063364","specification":"86×55×23","firm_name":"湖南中烟工业有限责任公司","brandcn":"白沙","picture_filename":"/userfile/uploada/gra/sj210521144038405094/06901028063364/06901028063364.1.jpg","description":"白沙(硬新精品二代)","gpcname":"雪茄","saledate":"2018-08-17T05:45:00Z","saledateyear":2018}]}}.Data.Items[0];
+                
+                  // 构建表格行并插入到表格中
+                  var table = document.getElementById("productTable");
+                  var row = table.insertRow(-1);
+                  var cell1 = row.insertCell(0);
+                  cell1.innerHTML = data.gtin;
+                  var cell2 = row.insertCell(1);
+                  cell2.innerHTML = data.specification;
+                  var cell3 = row.insertCell(2);
+                  cell3.innerHTML = data.firm_name;
+                  var cell4 = row.insertCell(3);
+                  cell4.innerHTML = data.brandcn;
+                  var cell5 = row.insertCell(4);
+                  cell5.innerHTML = `<img src="${data.picture_filename}" alt="产品图片" style="width:100px;">`;
+                  var cell6 = row.insertCell(5);
+                  cell6.innerHTML = data.description;
+                  var cell7 = row.insertCell(6);
+                  cell7.innerHTML = data.gpcname;
+                  var cell8 = row.insertCell(7);
+                  cell8.innerHTML = new Date(data.saledate).toDateString();
+                  var cell9 = row.insertCell(8);
+                  cell9.innerHTML = data.saledateyear;
+              })
+              .catch(error => {
+                // 处理错误
+                console.error('请求失败', error);
+              });
         }
     </script>
 
