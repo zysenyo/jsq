@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>商品接口查询</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 5vw;
+        }
+            table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+        th, td {
+          border: 1px solid black;
+          padding: 8px;
+          text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id="barcode-input">
+    <button onclick="chxun()">查询</button>
+    <button id="jkqh" data="mxnzp" onclick="qh()">切换接口-正在使用mxnzp接口，稳定但数据有限</button>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+
+    <a href="javascript:window.open('//996315.com/api/scan/?redirect_uri=' + encodeURIComponent(location.href), '_self');">扫一扫</a>
+
+    <h2>商品信息</h2>
+    <!-- <table id="productTable">
+      <tr
+          <th>商品名称</th>
+        <th>条形码</th>
+        <th>预估价格</th>
+        <th>品牌</th>
+        <th>厂商</th>
+        <th>规格</th>
+      </tr>
+    </table> -->
+    <div id="err"></div>
+    <script>
+        //var qr=GetQueryString("qrresult");
+        /*if(qr){
+            document.getElementById('barcode-input').value = qr.split(",")[1];
+        }*/
+         
+        function GetQueryString(name){
+            var reg = new RegExp("\\b"+ name +"=([^&]*)");
+            var r = location.href.match(reg);
+            if (r!=null) return decodeURIComponent(r[1]);
+        }
+
+        function qh(){
+            var button = document.getElementById('jkqh');
+			// 获取data属性的值
+			var dataValue = button.getAttribute('data');
+			if (dataValue == "mxnzp") {
+				// 修改data属性的值
+				button.setAttribute('data', 'zgspxxfwpt'); //修改为中国商品信息服务平台
+				document.getElementById("jkqh").innerHTML = "切换接口-正在使用中国商品信息服务平台接口，每天有访问限制，数据全";
+			}else{
+				button.setAttribute('data', 'mxnzp'); //修改为mxnzp
+				document.getElementById("jkqh").innerHTML = "切换接口-正在使用mxnzp接口，稳定但数据有限";
+			}
+        }
+
+        function chxun(){
+            var barcode = document.getElementById("barcode-input").value;
+
+            // 获取用户输入的商品条形码
+            // var barcode = "6901028063364";
+            
+            // 在商品条形码前面加上0
+            //var fullBarcode = "0" + barcode;
+            
+            // 构建完整的请求地址
+            //var requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=" + fullBarcode;
+
+            //var requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=06901028063364";
+            
+            var button = document.getElementById('jkqh');
+			// 获取data属性的值
+			var dataValue = button.getAttribute('data');
+			var requestUrl;
+			if (dataValue == "mxnzp") {
+				requestUrl = "https://www.mxnzp.com/api/barcode/goods/details?barcode="+ barcode +"&app_id=owphrfqcfkjsfv9e&app_secret=VOgXyOkpMCOvcab0PXliyuLUyFrHdkco";
+			}else{
+				//中国商品信息服务平台
+				requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=06921294391985";
+			}
+
+            //var requestUrl = "https://www.mxnzp.com/api/barcode/goods/details?barcode="+ barcode +"&app_id=owphrfqcfkjsfv9e&app_secret=VOgXyOkpMCOvcab0PXliyuLUyFrHdkco";
+
+            //中国商品信息服务平台
+            //var requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=06921294391985";
+
+            /*console.log(barcode);
+            console.log(requestUrl);*/
+
+            // 使用fetch函数发送GET请求
+			fetch(requestUrl)
+			  .then(response => response.json())  // 将响应转换为JSON格式
+			  .then(resData => {
+					console.log(resData.msg);
+					if (resData.code === 1) {
+						// 创建表格并添加中文表头
+						let table = document.createElement('table');
+						let thead = table.createTHead();
+						let row = thead.insertRow();
+						let headers;
+						if (dataValue == "mxnzp") {
+							headers = {
+							  "goodsName": "产品名称",
+							  "barcode": "条形码",
+							  "price": "预估价格",
+							  "brand": "品牌",
+							  "supplier": "供应商",
+							  "standard": "规格"
+							};
+						}else{
+							//中国商品信息服务平台
+							headers = {
+							  "gtin": "条形码",
+							  "description": "产品名称",
+							  "specification": "规格",
+							  "brandcn": "品牌名称",
+							  "firm_name": "企业名称",
+							  "picture_filename": "图片",
+							  "gpcname": "分类",
+							  "saledate": "上市日期"
+							};
+						}
+						/*let headers = {
+						  "goodsName": "产品名称",
+						  "barcode": "条形码",
+						  "price": "预估价格",
+						  "brand": "品牌",
+						  "supplier": "供应商",
+						  "standard": "规格"
+						};*/
+						for (let key in resData.data) {
+						  let th = document.createElement('th');
+						  th.appendChild(document.createTextNode(headers[key]));
+						  row.appendChild(th);
+						}
+
+						// 添加数据行
+						let tbody = table.createTBody();
+						let row2 = tbody.insertRow();
+						for (let key in resData.data) {
+						  let cell = row2.insertCell();
+						  cell.appendChild(document.createTextNode(resData.data[key]));
+						}
+
+						// 将表格添加到页面中
+						document.body.appendChild(table);
+					} else {
+						document.getElementById("err").innerHTML = resData.msg;
+					}
+			  })
+			  .catch(
+			  		error => {
+			  			console.error('请求失败', error);
+			  			document.getElementById("err").innerHTML = '请求失败: ' + error;
+			  		}
+			  );
+            
+            // 发起请求
+            /*fetch(requestUrl)
+              .then(response => response.json())
+              .then(data => {
+
+                  document.getElementById("err").value = data;
+                  
+                  var table = document.getElementById("productTable");
+                  var row = table.insertRow(-1);
+                  var cell1 = row.insertCell(0);
+                  cell1.innerHTML = data.goodsName;
+                  var cell2 = row.insertCell(1);
+                  cell2.innerHTML = data.barcode;
+                  var cell3 = row.insertCell(2);
+                  cell3.innerHTML = data.price;
+                  var cell4 = row.insertCell(3);
+                  cell4.innerHTML = data.brand;
+                  var cell5 = row.insertCell(4);
+                  cell5.innerHTML = data.supplier;
+                  var cell6 = row.insertCell(5);
+                  cell6.innerHTML = data.standard;
+              })
+              .catch(error => {
+                  document.getElementById("err").value = '请求失败: ' + error;
+              });*/
+        }
+    </script>
+
+</body>
+</html>
