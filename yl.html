@@ -87,7 +87,9 @@
 				requestUrl = "https://www.mxnzp.com/api/barcode/goods/details?barcode="+ barcode +"&app_id=owphrfqcfkjsfv9e&app_secret=VOgXyOkpMCOvcab0PXliyuLUyFrHdkco";
 			}else{
 				//中国商品信息服务平台
-				requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=06921294391985";
+				// 在商品条形码前面加上0
+            	var fullBarcode = "0" + barcode;
+				requestUrl = "https://bff.gds.org.cn/gds/searching-api/ProductService/ProductListByGTIN?PageSize=30&PageIndex=1&SearchItem=" + fullBarcode;
 			}
 
             //var requestUrl = "https://www.mxnzp.com/api/barcode/goods/details?barcode="+ barcode +"&app_id=owphrfqcfkjsfv9e&app_secret=VOgXyOkpMCOvcab0PXliyuLUyFrHdkco";
