@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>验证码识别</title>
+  <!-- <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script> -->
+  <script src="https://unpkg.com/tesseract.js@5.0.0/dist/tesseract.min.js"></script>
+  <script>
+    /*document.addEventListener('DOMContentLoaded', function() {
+      var img = new Image();
+      // img.crossOrigin = "Anonymous"; // 设置跨域属性
+      img.src = 'file:///C:/Users/Administrator/Desktop/verify.png'; // 替换成你的验证码图片URL
+      img.onload = function() {
+        Tesseract.recognize(img, 'eng')
+          .then(function(result) {
+            console.log(result.text); // 输出识别出的文本
+            document.getElementById('recognizedText').innerText = result.text; // 在页面上显示识别的文本
+          })
+          .catch(function(err) {
+            console.error(err);
+          });
+      };
+    });*/
+    	
+    	// import { createWorker } from 'tesseract.js';
+		/*(async () => {
+		//	创建woker,并选用语言模型，
+		  const worker = await createWorker('eng');
+		  const ret = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
+		  console.log(ret.data.text);
+		  //	关闭woker
+		  await worker.terminate();
+		})();*/
+
+		    /*document.addEventListener('DOMContentLoaded', async function() {
+			      // 创建worker，并选用语言模型
+			      const worker = Tesseract.createWorker();
+			      // await worker.load();
+			      await worker.loadLanguage('eng');
+			      await worker.initialize('eng');
+			      const result = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png'); // 替换成你的验证码图片URL
+			      console.log(result.data.text);
+			      document.getElementById('recognizedText').innerText = result.data.text; // 在页面上显示识别的文本
+			      // 关闭worker
+			      await worker.terminate();
+		    });*/
+
+		    /*recognize('https://tesseract.projectnaptha.com/img/eng_bw.png', 'chi_sim+eng')
+            .then(result => {
+              var extractedText = result.data.text;
+              console.log('识别结果:', extractedText);
+              document.getElementById('recognizedText').textContent = extractedText;
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });*/
+
+            /*let worker;
+            worker = Tesseract.createWorker('eng');
+          	worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png')
+            .then(result => {
+              var extractedText = result.data.text;
+              console.log('识别结果:', extractedText);
+              document.getElementById('recognizedText').textContent = extractedText;
+
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            }).finally(() => {
+              console.log(123);
+              if (worker)
+                worker.terminate();
+
+            })*/
+            	var timestamp = Date.parse(new Date());
+	        	timestamp = timestamp / 1000;
+
+              const exampleImage = 'http://tiaoma.cnaidc.com/index/verify.html?time='+timestamp;
+			  Tesseract.setLogging(true);
+
+			  const workerPromise = Tesseract.createWorker("eng", 1, {
+			    legacyCore: true,
+			    legacyLang: true,
+			    logger: m => console.log(m)
+			  });
+
+			  workerPromise.then(worker => work(worker));
+
+			  async function work(worker) {
+			    let result = await worker.detect(exampleImage);
+			    console.log(result.data);
+
+			    result = await worker.recognize(exampleImage);
+			    console.log(result.data);
+
+			    document.getElementById('recognizedText').textContent = result.data;
+
+			    await worker.terminate();
+			  }
+  </script>
+</head>
+<body>
+  <h1>验证码识别结果</h1>
+  <p id="recognizedText"></p>
+</body>
+</html>
+
